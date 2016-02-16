@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="54769bda-c1b3-4e5d-8cbb-dc7b20588bc5">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="business_name" class="java.lang.String"/>
+	<parameter name="printed_by" class="java.lang.String"/>
+	<parameter name="date" class="java.lang.String"/>
+	<field name="date" class="java.lang.String"/>
+	<field name="customer_id" class="java.lang.String"/>
+	<field name="customer_name" class="java.lang.String"/>
+	<field name="cash" class="java.lang.Double"/>
+	<field name="check" class="java.lang.Double"/>
+	<variable name="cash_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{cash}]]></variableExpression>
+	</variable>
+	<variable name="cash_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{cash}]]></variableExpression>
+	</variable>
+	<variable name="check_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{check}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="117" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1e063238-feac-4fec-81aa-2ea207d04a03" x="0" y="20" width="248" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="15"/>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[AR Payments]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="23591cd6-9396-4178-b957-0e10b34075b2" x="0" y="41" width="248" height="20"/>
+				<textElement>
+					<font size="15"/>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8adbce5b-7007-497c-814c-9bcc68a02837" x="0" y="0" width="248" height="20"/>
+				<textElement>
+					<font size="15"/>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{business_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1a9f30fb-def8-4d7b-af3d-8fddc6d0bc0a" x="0" y="0" width="68" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d8c94f22-8fbe-447a-a3a6-90738c31a222" x="68" y="0" width="100" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[ID No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="57bdfe47-e23d-4ebf-aa70-0181b62cb7eb" x="168" y="0" width="132" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4f8771d5-c3d0-497c-b430-807eb349bea1" x="300" y="0" width="80" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Cash]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94b07941-c848-40ba-b714-9944b804f971" x="380" y="0" width="80" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Check]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94b07941-c848-40ba-b714-9944b804f971" x="460" y="0" width="80" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement uuid="71e2e4c5-f0eb-4d1c-bfc7-fdeb14972bc0" x="0" y="0" width="68" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="55e6fc7e-0399-45c7-8ed2-9c9ecc28fbde" x="68" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4aa3cdb7-efe2-4519-a606-7d44067492f4" x="168" y="0" width="132" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="1586ab0d-ca8c-4b1f-ac99-639257526523" x="300" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cash}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="8d51beb6-68bf-4119-aafa-47ddf2e0d0cf" x="380" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{check}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="8d51beb6-68bf-4119-aafa-47ddf2e0d0cf" x="460" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{check} + $F{cash}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="166" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1a9f30fb-def8-4d7b-af3d-8fddc6d0bc0a" x="0" y="15" width="68" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Total Cash:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1a9f30fb-def8-4d7b-af3d-8fddc6d0bc0a" x="0" y="35" width="68" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Total Check:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1a9f30fb-def8-4d7b-af3d-8fddc6d0bc0a" x="0" y="55" width="68" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="6"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement uuid="4c3aba22-c4ad-4c8d-91b2-b092a2bf3fd2" mode="Transparent" x="68" y="15" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{cash_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement uuid="72e253fc-b0ac-40d1-a61f-6073c92e2aba" mode="Transparent" x="68" y="35" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{check_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement uuid="4c3aba22-c4ad-4c8d-91b2-b092a2bf3fd2" mode="Transparent" x="68" y="55" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{cash_2}+$V{check_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

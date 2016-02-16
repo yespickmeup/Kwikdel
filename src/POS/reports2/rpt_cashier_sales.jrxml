@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="792" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4e6b5b53-5416-42a2-8655-51a764f2e4d8">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="rpt_transactions" class="java.util.List"/>
+	<parameter name="rpt_items" class="java.util.List"/>
+	<parameter name="date" class="java.lang.String"/>
+	<parameter name="rpt_deposits" class="java.util.List"/>
+	<parameter name="walkin_sales" class="java.lang.Double"/>
+	<parameter name="delivery_sales" class="java.lang.Double"/>
+	<group name="rpt_transactions">
+		<groupExpression><![CDATA[$P{rpt_transactions}]]></groupExpression>
+		<groupHeader>
+			<band height="5">
+				<subreport>
+					<reportElement uuid="b4f2628a-5ea7-4bdd-a1a9-7cd0417126c4" x="37" y="0" width="216" height="5"/>
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{rpt_transactions}, false);]]></dataSourceExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rpt_sales_transaction_by_cashier.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="rpt_items">
+		<groupExpression><![CDATA[$P{rpt_items}]]></groupExpression>
+		<groupHeader>
+			<band height="5">
+				<subreport>
+					<reportElement uuid="b4f2628a-5ea7-4bdd-a1a9-7cd0417126c4" x="37" y="0" width="216" height="5"/>
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{rpt_items}, false);]]></dataSourceExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rpt_sales_item.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="rpt_deposits">
+		<groupExpression><![CDATA[$P{rpt_deposits}]]></groupExpression>
+		<groupHeader>
+			<band height="5">
+				<subreport>
+					<reportElement uuid="b4f2628a-5ea7-4bdd-a1a9-7cd0417126c4" x="37" y="0" width="216" height="5"/>
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{rpt_deposits}, false);]]></dataSourceExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rpt_deposits.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="8adf687a-e72c-414b-8437-1d5c6d85b29d" x="72" y="16" width="247" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Sales by Cashier]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="0a7b2d63-099f-498d-946a-0ea1fe4786b2" x="72" y="33" width="247" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="68" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="59905401-99c2-4388-8e1e-45ce4798e205" x="72" y="12" width="75" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Walkin Sales:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="59905401-99c2-4388-8e1e-45ce4798e205" x="72" y="26" width="75" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Delivery Sales:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="1b8062ef-da4e-40e2-b28a-5bdea76f5dcb" x="147" y="12" width="100" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{walkin_sales}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="c2e96105-7c30-4a28-a0b2-92096e2773e4" x="147" y="26" width="100" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{delivery_sales}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
