@@ -11,7 +11,7 @@ import POS.sales.S1_sales_items;
 import POS.sales_dr.S1_sales_dr;
 import POS.services.S1_sales_services;
 import POS.services.S1_sales_services.to_sales_services;
-import static POS.util.DateType.datetime;
+import POS.util.DateType;
 import POS.util.MyConnection;
 import POS.util.MyConnectionInnosoft;
 import java.awt.Toolkit;
@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import mijzcx.synapse.desk.utils.Lg;
 import mijzcx.synapse.desk.utils.SqlStringUtil;
-import synsoftech.util.DateType;
+
 
 /**
  *

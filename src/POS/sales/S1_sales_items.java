@@ -22,7 +22,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JOptionPane;
 import mijzcx.synapse.desk.utils.Lg;
 import mijzcx.synapse.desk.utils.SqlStringUtil;
 
@@ -447,7 +446,7 @@ public class S1_sales_items {
 
                             s16 = SqlStringUtil.parse(s16).
                                     setString("DocRef", sales_no).
-                                    setString("DocDate", synsoftech.util.DateType.datetime2.format(new Date())).
+                                    setString("DocDate", DateType.datetime2.format(new Date())).
                                     setString("ItemCode", items.barcode).
                                     setNumber("ItemId", id1).
                                     setNumber("Price", items.selling_price).
