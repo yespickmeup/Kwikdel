@@ -5,7 +5,7 @@
  */
 package POS.util;
 
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

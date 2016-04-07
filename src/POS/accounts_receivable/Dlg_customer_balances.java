@@ -4,8 +4,8 @@
  */
 package POS.accounts_receivable;
 
-import POS.customers.S1_customers;
-import POS.customers.S1_customers.to_customers;
+import POS.customers.Customers;
+import POS.customers.Customers.to_customers;
 import POS.main.Main;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.ArrayListModel;
@@ -438,7 +438,7 @@ public class Dlg_customer_balances extends javax.swing.JDialog {
     private void data_cols() {
         String search = tf_search.getText();
 
-        List<to_customers> datas = S1_customers.ret_data(search);
+        List<to_customers> datas = Customers.ret_data(search);
         loadData_customers(datas);
         double balance = 0;
         for (to_customers t : datas) {

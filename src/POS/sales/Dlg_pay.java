@@ -6,7 +6,7 @@ package POS.sales;
 
 import POS.banks.S1_banks;
 import POS.check_holders.S1_check_holders;
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.discount_customers.S1_discount_customers;
 import POS.discounts.S1_discounts;
 import POS.main.Main;
@@ -1328,10 +1328,10 @@ public class Dlg_pay extends javax.swing.JDialog {
 
     private void add_customer() {
 
-        List<S1_customers.to_customers> datas = customers_list;
+        List<Customers.to_customers> datas = customers_list;
         int naa = 0;
         if (!tf_customer_name.getText().isEmpty() || tf_customer_name.getText().equals("")) {
-            for (S1_customers.to_customers to : datas) {
+            for (Customers.to_customers to : datas) {
                 if (to.customer_name.equalsIgnoreCase(tf_customer_name.getText())) {
                     naa = 1;
                     break;
@@ -1423,7 +1423,7 @@ public class Dlg_pay extends javax.swing.JDialog {
         nd.setVisible(true);
     }
 
-    List<S1_customers.to_customers> customers_list = new ArrayList();
+    List<Customers.to_customers> customers_list = new ArrayList();
 
     private void init_customers(final JTextField tf1, final JTextField tf2) {
         String search = tf1.getText();
@@ -1431,11 +1431,11 @@ public class Dlg_pay extends javax.swing.JDialog {
             customers_list.clear();
             String where = "";
             where = " where lname like '%" + search + "%' or fname like '%" + search + "%' order by fname asc";
-            customers_list = S1_customers.ret_data(where);
+            customers_list = Customers.ret_data(where);
             if (!customers_list.isEmpty()) {
                 Object[][] obj = new Object[customers_list.size()][2];
                 int i = 0;
-                for (S1_customers.to_customers to : customers_list) {
+                for (Customers.to_customers to : customers_list) {
                     obj[i][0] = to.customer_no;
                     obj[i][1] = to.customer_name;
                     i++;
@@ -1449,7 +1449,7 @@ public class Dlg_pay extends javax.swing.JDialog {
                 tr.setCallback(new TableRenderer.Callback() {
                     @Override
                     public void ok(TableRenderer.OutputData data) {
-                        S1_customers.to_customers to = customers_list.get(data.selected_row);
+                        Customers.to_customers to = customers_list.get(data.selected_row);
                         tf1.setText(to.customer_name);
                         tf2.setText("" +to.customer_no);
                         tf_amount_paid.grabFocus();

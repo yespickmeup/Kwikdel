@@ -5,7 +5,7 @@
 package POS.accounts_receivable;
 
 import POS.accounts_receivable.S1_accounts_receivable.to_accounts_receivable;
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.main.Main;
 import POS.util.Alert;
 import POS.util.DateType;
@@ -672,7 +672,7 @@ public class Dlg_accounts_receivable extends javax.swing.JDialog {
 
     }
 
-    private void loadData_customers(List<S1_customers.to_customers> acc) {
+    private void loadData_customers(List<Customers.to_customers> acc) {
         tbl_customers_ALM.clear();
         tbl_customers_ALM.addAll(acc);
 
@@ -707,7 +707,7 @@ public class Dlg_accounts_receivable extends javax.swing.JDialog {
 
         @Override
         public Object getValueAt(int row, int col) {
-            S1_customers.to_customers tt = (S1_customers.to_customers) getRow(row);
+            Customers.to_customers tt = (Customers.to_customers) getRow(row);
             switch (col) {
                 case 0:
                     return tt.id;
@@ -735,11 +735,11 @@ public class Dlg_accounts_receivable extends javax.swing.JDialog {
 
     private void data_cols() {
         String search = tf_search.getText();
-        loadData_customers(S1_customers.ret_data(search));
+        loadData_customers(Customers.ret_data(search));
 
-        List<S1_customers.to_customers> datas = tbl_customers_ALM;
+        List<Customers.to_customers> datas = tbl_customers_ALM;
         double total = 0;
-        for (S1_customers.to_customers t : datas) {
+        for (Customers.to_customers t : datas) {
             total += t.balance;
         }
         lbl_total.setText(FitIn.fmt_wc_0(total));
@@ -895,7 +895,7 @@ public class Dlg_accounts_receivable extends javax.swing.JDialog {
             return;
         }
 
-        S1_customers.to_customers to = (S1_customers.to_customers) tbl_customers_ALM.
+        Customers.to_customers to = (Customers.to_customers) tbl_customers_ALM.
                 get(tbl_customers.convertRowIndexToModel(row));
         loadData_accounts_receivable(S1_accounts_receivable.ret_data(to.customer_no));
 

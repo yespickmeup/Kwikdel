@@ -7,7 +7,7 @@ package POS.accounts_receivable;
 import POS.accounts_receivable.S1_accounts_receivable.to_accounts_receivable;
 import POS.accounts_receivable.S1_accounts_receivable_payments.to_accounts_receivable_payments;
 import POS.customers.Dlg_customers;
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.main.Main;
 import POS.terms.S1_terms;
 import POS.util.Alert;
@@ -1368,16 +1368,16 @@ public class Dlg_ar_encoding extends javax.swing.JDialog {
         lbl.setBackground(new java.awt.Color(255, 255, 255));
         lbl.setForeground(new java.awt.Color(153, 153, 153));
     }
-    List<S1_customers.to_customers> customer_list = new ArrayList();
+    List<Customers.to_customers> customer_list = new ArrayList();
 
     private void init_popup() {
 
         String search = tf_search_customer.getText();
         customer_list.clear();
-        customer_list = S1_customers.ret_data(search);
+        customer_list = Customers.ret_data(search);
         Object[][] obj = new Object[customer_list.size()][4];
         int i = 0;
-        for (S1_customers.to_customers to : customer_list) {
+        for (Customers.to_customers to : customer_list) {
             obj[i][0] = to.customer_no;
             obj[i][1] = to.first_name + " " + to.last_name;
             obj[i][2] = FitIn.fmt_wc_0(to.credit_limit);
@@ -1392,7 +1392,7 @@ public class Dlg_ar_encoding extends javax.swing.JDialog {
         tr.setCallback(new TableRenderer.Callback() {
             @Override
             public void ok(TableRenderer.OutputData data) {
-                S1_customers.to_customers to = customer_list.get(data.selected_row);
+                Customers.to_customers to = customer_list.get(data.selected_row);
                 tf_customer_id.setText(""+to.id);
                 tf_customer_name.setText(to.first_name + " " + to.last_name);
                 lbl_credit_limit.setText(FitIn.fmt_wc_0(to.credit_limit));
@@ -2021,7 +2021,7 @@ public class Dlg_ar_encoding extends javax.swing.JDialog {
         Window p = (Window) this;
         Dlg_ar_ledger nd = Dlg_ar_ledger.create(p, true);
         nd.setTitle("");
-        S1_customers.to_customers to = customer_list.get(selected_row);
+        Customers.to_customers to = customer_list.get(selected_row);
         nd.do_pass(to.customer_no, to.customer_name, to.address);
         nd.setCallback(new Dlg_ar_ledger.Callback() {
 

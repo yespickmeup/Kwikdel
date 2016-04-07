@@ -5,7 +5,7 @@
  */
 package POS.MasterData;
 
-import POS.customers.S1_customers.to_customers;
+import POS.customers.Customers.to_customers;
 import POS.reports2.Srpt_sales_by_cashier;
 import POS.sales.Srpt_receipt;
 import POS.util.MyConnection;

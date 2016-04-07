@@ -5,7 +5,7 @@
  */
 package POS.deposits;
 
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.items.S1_items;
 import POS.util.MyConnection;
 import POS.util.Users;
@@ -181,7 +181,7 @@ public class S1_deposits {
             stmt2.execute();
 
             String where2 = " where id='" + to_deposits.customer_id + "' ";
-            S1_customers.to_customers dep = ret_deposit(where2);
+            Customers.to_customers dep = ret_deposit(where2);
             double deposit = dep.deposit + (to_deposits.qty * to_deposits.selling_price);
             String s3 = "update customers set "
                     + "deposit='" + deposit + "' "
@@ -197,8 +197,8 @@ public class S1_deposits {
         }
     }
 
-    public static S1_customers.to_customers ret_deposit(String where) {
-        S1_customers.to_customers to = null;
+    public static Customers.to_customers ret_deposit(String where) {
+        Customers.to_customers to = null;
 
         try {
             Connection conn = MyConnection.connect();
@@ -246,7 +246,7 @@ public class S1_deposits {
                 String client_id = rs.getString(17);
                 double deposit = rs.getDouble(18);
 
-                to = new S1_customers.to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi, deposit);
+                to = new Customers.to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi, deposit);
 
             }
             return to;
@@ -346,7 +346,7 @@ public class S1_deposits {
             stmt2.execute();
 
             String where2 = " where id='" + to_deposits.customer_id + "' ";
-            S1_customers.to_customers dep = ret_deposit(where2);
+            Customers.to_customers dep = ret_deposit(where2);
             double deposit = dep.deposit - (to_deposits.qty * to_deposits.selling_price);
             String s3 = "update customers set "
                     + "deposit='" + deposit + "' "
@@ -384,7 +384,7 @@ public class S1_deposits {
             stmt2.execute();
 
             String where2 = " where id='" + to_deposits.customer_id + "' ";
-            S1_customers.to_customers dep = ret_deposit(where2);
+            Customers.to_customers dep = ret_deposit(where2);
             double deposit = dep.deposit - (qty * to_deposits.selling_price);
             String s3 = "update customers set "
                     + "deposit='" + deposit + "' "

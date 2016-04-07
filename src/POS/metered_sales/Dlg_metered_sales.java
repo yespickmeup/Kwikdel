@@ -5,7 +5,7 @@
  */
 package POS.metered_sales;
 
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.metered_sales.S1_metered_sale_readings.to_metered_sale_readings;
 import POS.metered_sales.S1_metered_sales.to_metered_sales;
 import POS.util.Courier;
@@ -860,16 +860,16 @@ public class Dlg_metered_sales extends javax.swing.JDialog {
     }
     // </editor-fold>
 
-    List<S1_customers.to_customers> customer_list = new ArrayList();
+    List<Customers.to_customers> customer_list = new ArrayList();
 
     private void init_customers() {
         String search = tf_customer_name.getText();
         customer_list.clear();
         String where = " where last_name like '%" + search + "%' or first_name like '%" + search + "%' ";
-        customer_list = S1_customers.ret_data2(where);
+        customer_list = Customers.ret_data2(where);
         Object[][] obj = new Object[customer_list.size()][2];
         int i = 0;
-        for (S1_customers.to_customers to : customer_list) {
+        for (Customers.to_customers to : customer_list) {
             obj[i][0] = " " + to.first_name + " " + to.last_name;
             obj[i][1] = " " + to.address;
             i++;
@@ -883,7 +883,7 @@ public class Dlg_metered_sales extends javax.swing.JDialog {
         tr.setCallback(new TableRenderer.Callback() {
             @Override
             public void ok(TableRenderer.OutputData data) {
-                S1_customers.to_customers to = customer_list.get(data.selected_row);
+                Customers.to_customers to = customer_list.get(data.selected_row);
                 tf_customer_name.setText(to.first_name + " " + to.last_name);
                 tf_customer_id.setText("" + to.id);
                 tf_description.grabFocus();
@@ -1362,7 +1362,7 @@ public class Dlg_metered_sales extends javax.swing.JDialog {
         List<Srpt_statement_of_account.field> fields = new ArrayList();
         String customer_id = tf_customer_id.getText();
         String where2 = " where id='" + customer_id + "'";
-        S1_customers.to_customers cus = Srpt_statement_of_account.ret_data(where2);
+        Customers.to_customers cus = Srpt_statement_of_account.ret_data(where2);
         for (to_metered_sales to : datas) {
             if (to.selected == true) {
                 String where = " where metered_sale_id='" + to.id + "' and status='" + "0" + "' ";

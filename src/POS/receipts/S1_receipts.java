@@ -4,13 +4,16 @@
  */
 package POS.receipts;
 
+import POS.util.DateType;
 import POS.util.MyConnection;
+import POS.util.MyConnectionInnosoft;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import mijzcx.synapse.desk.utils.Lg;
 import mijzcx.synapse.desk.utils.ReceiptIncrementor;
@@ -41,9 +44,7 @@ public class S1_receipts {
         public final String to_location_name;
         public final String to_location_id;
 
-        public to_receipts(int id, String receipt_no, String user_name, String session_no, String date_added, String supplier, String supllier_id
-                , String remarks, String date_delivered, String date_received, int status, String reference_no
-                , String from_location_name, String from_location_id, String to_location_name, String to_location_id) {
+        public to_receipts(int id, String receipt_no, String user_name, String session_no, String date_added, String supplier, String supllier_id, String remarks, String date_delivered, String date_received, int status, String reference_no, String from_location_name, String from_location_id, String to_location_name, String to_location_id) {
             this.id = id;
             this.receipt_no = receipt_no;
             this.user_name = user_name;
@@ -121,6 +122,75 @@ public class S1_receipts {
 
             PreparedStatement stmt = conn.prepareStatement(s0);
             stmt.execute();
+
+            //insert to Innosoft TrnStockIn
+            String send_sales_to_innosoft = System.getProperty("send_sales_to_innosoft", "false");
+            System.out.println("Send to Innosoft: " + send_sales_to_innosoft);
+            if (send_sales_to_innosoft.equalsIgnoreCase("true")) {
+                String StockInDate = DateType.sf.format(new Date()) + " 00:00:00.000";
+                String LastStockInNumber = MyConnectionInnosoft.getLastStockInNumber();
+                LastStockInNumber = ReceiptIncrementor.increment(LastStockInNumber);
+                String s2 = " insert into dbo.TrnStockIn ("
+                        + " PeriodId"
+                        + ",StockInDate"
+                        + ",StockInNumber"
+                        + ",SupplierId"
+                        + ",Remarks"
+                        + ",IsReturn"
+                        + ",CollectionId"
+                        + ",PurchaseOrderId"
+                        + ",PreparedBy"
+                        + ",CheckedBy"
+                        + ",ApprovedBy"
+                        + ",IsLocked"
+                        + ",EntryUserId"
+                        + ",EntryDateTime"
+                        + ",UpdateUserId"
+                        + ",UpdateDateTime"
+                        + ",SalesId"
+                        + ")values("
+                        + " :PeriodId"
+                        + ",:StockInDate"
+                        + ",:StockInNumber"
+                        + ",:SupplierId"
+                        + ",:Remarks"
+                        + ",:IsReturn"
+                        + ",:CollectionId"
+                        + ",:PurchaseOrderId"
+                        + ",:PreparedBy"
+                        + ",:CheckedBy"
+                        + ",:ApprovedBy"
+                        + ",:IsLocked"
+                        + ",:EntryUserId"
+                        + ",:EntryDateTime"
+                        + ",:UpdateUserId"
+                        + ",:UpdateDateTime"
+                        + ",:SalesId"
+                        + ")";
+
+                s2 = SqlStringUtil.parse(s2).
+                        setString("PeriodId", "1").
+                        setString("StockInDate", StockInDate).
+                        setString("StockInNumber", LastStockInNumber).
+                        setString("SupplierId", "23").
+                        setString("Remarks", "").
+                        setString("IsReturn", "0").
+                        setString("CollectionId", "NULL").
+                        setString("PurchaseOrderId", "NULL").
+                        setString("PreparedBy", "1").
+                        setString("CheckedBy", "1").
+                        setString("ApprovedBy", "1").
+                        setString("IsLocked", "-1").
+                        setString("EntryUserId", "1").
+                        setString("EntryDateTime", StockInDate).
+                        setString("UpdateUserId", "1").
+                        setString("UpdateDateTime", StockInDate).
+                        setString("SalesId", "NULL").
+                        ok();
+                PreparedStatement stmt2 = conn.prepareStatement(s2);
+                stmt2.execute();
+            }
+            
             Lg.s(S1_receipts.class, "Successfully Added");
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -256,8 +326,7 @@ public class S1_receipts {
                 String from_location_id = rs.getString(14);
                 String to_location_name = rs.getString(15);
                 String to_location_id = rs.getString(16);
-                to_receipts to = new to_receipts(id, receipt_no, user_name, session_no, date_added, supplier, supllier_id, remarks, date_delivered, date_received
-                        , status, reference_no, from_location_name, from_location_name, to_location_name, to_location_id);
+                to_receipts to = new to_receipts(id, receipt_no, user_name, session_no, date_added, supplier, supllier_id, remarks, date_delivered, date_received, status, reference_no, from_location_name, from_location_name, to_location_name, to_location_id);
                 datas.add(to);
             }
             return datas;

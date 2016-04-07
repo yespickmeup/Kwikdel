@@ -4,16 +4,21 @@
  */
 package POS.receipts;
 
+import POS.items.S1_item_multi_level_pricing;
 import POS.items.S1_items;
+import POS.util.DateType;
 import POS.util.MyConnection;
+import POS.util.MyConnectionInnosoft;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import mijzcx.synapse.desk.utils.Lg;
+import mijzcx.synapse.desk.utils.ReceiptIncrementor;
 import mijzcx.synapse.desk.utils.SqlStringUtil;
 
 /**
@@ -197,7 +202,7 @@ public class S1_receipt_items {
                 PreparedStatement stmt = conn.prepareStatement(s0);
                 stmt.execute();
                 Lg.s(S1_receipt_items.class, "Successfully Added");
-                S1_items.to_items tt = S1_items.ret_data2(to_receipt_items.barcode,to_receipt_items.from_location_id);
+                S1_items.to_items tt = S1_items.ret_data2(to_receipt_items.barcode, to_receipt_items.from_location_id);
                 double new_qty = tt.product_qty + (to_receipt_items.conversion * to_receipt_items.qty);
                 String s2 = "update items set "
                         + "product_qty='" + new_qty + "',cost='" + to_receipt_items.cost + "' "
@@ -214,11 +219,71 @@ public class S1_receipt_items {
         }
     }
 
-    public static void add_receipt_items(List<to_receipt_items> to_receipt_items1, S1_receipts.to_receipts receipt) {
+    public static void add_receipt_items(List<to_receipt_items> to_receipt_items1, S1_receipts.to_receipts to_receipts) {
         try {
             Connection conn = MyConnection.connect();
+            conn.setAutoCommit(false);
+            Connection conn2 = MyConnectionInnosoft.connect();
+
+            //<editor-fold defaultstate="collapsed" desc=" Receipt ">
+            String s0 = "insert into receipts("
+                    + "receipt_no"
+                    + ",user_name"
+                    + ",session_no"
+                    + ",date_added"
+                    + ",supplier"
+                    + ",supllier_id"
+                    + ",remarks"
+                    + ",date_delivered"
+                    + ",date_received"
+                    + ",status"
+                    + ",reference_no"
+                    + ",from_location_name"
+                    + ",from_location_id"
+                    + ",to_location_name"
+                    + ",to_location_id"
+                    + ")values("
+                    + ":receipt_no"
+                    + ",:user_name"
+                    + ",:session_no"
+                    + ",:date_added"
+                    + ",:supplier"
+                    + ",:supllier_id"
+                    + ",:remarks"
+                    + ",:date_delivered"
+                    + ",:date_received"
+                    + ",:status"
+                    + ",:reference_no"
+                    + ",:from_location_name"
+                    + ",:from_location_id"
+                    + ",:to_location_name"
+                    + ",:to_location_id"
+                    + ")";
+
+            s0 = SqlStringUtil.parse(s0).
+                    setString("receipt_no", to_receipts.receipt_no).
+                    setString("user_name", to_receipts.user_name).
+                    setString("session_no", to_receipts.session_no).
+                    setString("date_added", to_receipts.date_added).
+                    setString("supplier", to_receipts.supplier).
+                    setString("supllier_id", to_receipts.supllier_id).
+                    setString("remarks", to_receipts.remarks).
+                    setString("date_delivered", to_receipts.date_delivered).
+                    setString("date_received", to_receipts.date_received).
+                    setNumber("status", to_receipts.status).
+                    setString("reference_no", to_receipts.reference_no).
+                    setString("from_location_name", to_receipts.from_location_name).
+                    setString("from_location_id", to_receipts.from_location_id).
+                    setString("to_location_name", to_receipts.to_location_name).
+                    setString("to_location_id", to_receipts.to_location_id).
+                    ok();
+
+            PreparedStatement stmt = conn.prepareStatement(s0);
+            stmt.addBatch(s0);
+
+            //<editor-fold defaultstate="collapsed" desc=" Receipt Items ">
             for (to_receipt_items to_receipt_items : to_receipt_items1) {
-                String s0 = "insert into receipt_items("
+                String s4 = "insert into receipt_items("
                         + "receipt_no"
                         + ",user_name"
                         + ",session_no"
@@ -276,14 +341,14 @@ public class S1_receipt_items {
                         + ",:to_location_id"
                         + ")";
 
-                s0 = SqlStringUtil.parse(s0).
-                        setString("receipt_no", receipt.receipt_no).
-                        setString("user_name", receipt.user_name).
-                        setString("session_no", receipt.session_no).
-                        setString("date_added", receipt.date_added).
-                        setString("supplier", receipt.supplier).
-                        setString("supllier_id", receipt.supllier_id).
-                        setString("remarks", receipt.remarks).
+                s4 = SqlStringUtil.parse(s4).
+                        setString("receipt_no", to_receipts.receipt_no).
+                        setString("user_name", to_receipts.user_name).
+                        setString("session_no", to_receipts.session_no).
+                        setString("date_added", to_receipts.date_added).
+                        setString("supplier", to_receipts.supplier).
+                        setString("supllier_id", to_receipts.supllier_id).
+                        setString("remarks", to_receipts.remarks).
                         setString("barcode", to_receipt_items.barcode).
                         setString("description", to_receipt_items.description).
                         setNumber("qty", to_receipt_items.qty).
@@ -296,28 +361,208 @@ public class S1_receipt_items {
                         setString("sub_class_id", to_receipt_items.sub_class_id).
                         setNumber("conversion", to_receipt_items.conversion).
                         setString("unit", to_receipt_items.unit).
-                        setString("date_delivered", receipt.date_delivered).
-                        setString("date_received", receipt.date_received).
-                        setNumber("status", receipt.status).
-                        setString("reference_no", receipt.reference_no).
-                        setString("from_location_name", receipt.from_location_name).
-                        setString("from_location_id", receipt.from_location_id).
-                        setString("to_location_name", receipt.to_location_name).
-                        setString("to_location_id", receipt.to_location_id).
+                        setString("date_delivered", to_receipts.date_delivered).
+                        setString("date_received", to_receipts.date_received).
+                        setNumber("status", to_receipts.status).
+                        setString("reference_no", to_receipts.reference_no).
+                        setString("from_location_name", to_receipts.from_location_name).
+                        setString("from_location_id", to_receipts.from_location_id).
+                        setString("to_location_name", to_receipts.to_location_name).
+                        setString("to_location_id", to_receipts.to_location_id).
                         ok();
 
-                PreparedStatement stmt = conn.prepareStatement(s0);
-                stmt.execute();
-                Lg.s(S1_receipt_items.class, "Successfully Added");
-                S1_items.to_items tt = S1_items.ret_data3(to_receipt_items.barcode, receipt.from_location_id);
-                double new_qty = tt.product_qty + (to_receipt_items.conversion * to_receipt_items.qty);
-                String s2 = "update items set "
-                        + "product_qty='" + new_qty + "',cost='" + to_receipt_items.cost + "' "
-                        + " where barcode = '" + to_receipt_items.barcode + "' and location_id='" + receipt.from_location_id + "' "
+                PreparedStatement stmt4 = conn.prepareStatement(s4);
+                stmt.addBatch(s4);
+
+                //<editor-fold defaultstate="collapsed" desc=" select qty Items ">
+                String s7 = "select "
+                        + "product_qty"
+                        + " from items where "
+                        + " barcode ='" + to_receipt_items.barcode + "' and location_id='" + to_receipts.from_location_id + "' "
+                        + " ";
+
+                Statement stmt7 = conn.createStatement();
+                ResultSet rs7 = stmt7.executeQuery(s7);
+                double product_qty = 0;
+                if (rs7.next()) {
+                    product_qty = rs7.getDouble(1);
+                }
+
+                //</editor-fold>
+                double new_qty = product_qty + (to_receipt_items.conversion * to_receipt_items.qty);
+                String s5 = " update items set "
+                        + " product_qty='" + new_qty + "',cost='" + to_receipt_items.cost + "' "
+                        + " where barcode = '" + to_receipt_items.barcode + "' and location_id='" + to_receipts.from_location_id + "' "
                         + "";
-                PreparedStatement stmt2 = conn.prepareStatement(s2);
-                stmt2.execute();
+                PreparedStatement stmt5 = conn.prepareStatement(s5);
+                stmt5.execute();
+
+                //</editor-fold>
             }
+            stmt.executeBatch();
+            conn.commit();
+            Lg.s(S1_receipt_items.class, "Successfully Added Synapse");
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" TrnStockIn ">
+            String send_sales_to_innosoft = System.getProperty("send_sales_to_innosoft", "false");
+            System.out.println("Send to Innosoft: " + send_sales_to_innosoft);
+            String LastStockInNumber = "";
+            if (send_sales_to_innosoft.equalsIgnoreCase("true")) {
+                String StockInDate = DateType.sf.format(new Date()) + " 00:00:00.000";
+                LastStockInNumber = MyConnectionInnosoft.getLastStockInNumber();
+                LastStockInNumber = ReceiptIncrementor.increment(LastStockInNumber);
+                System.out.println("Transaction Number: " + LastStockInNumber);
+                String s2 = " insert into dbo.TrnStockIn ("
+                        + " PeriodId"
+                        + ",StockInDate"
+                        + ",StockInNumber"
+                        + ",SupplierId"
+                        + ",Remarks"
+                        + ",IsReturn"
+                        + ",CollectionId"
+                        + ",PurchaseOrderId"
+                        + ",PreparedBy"
+                        + ",CheckedBy"
+                        + ",ApprovedBy"
+                        + ",IsLocked"
+                        + ",EntryUserId"
+                        + ",EntryDateTime"
+                        + ",UpdateUserId"
+                        + ",UpdateDateTime"
+                        + ",SalesId"
+                        + ")values("
+                        + ":PeriodId"
+                        + ",:StockInDate"
+                        + ",:StockInNumber"
+                        + ",:SupplierId"
+                        + ",:Remarks"
+                        + ",:IsReturn"
+                        + ",:CollectionId"
+                        + ",:PurchaseOrderId"
+                        + ",:PreparedBy"
+                        + ",:CheckedBy"
+                        + ",:ApprovedBy"
+                        + ",:IsLocked"
+                        + ",:EntryUserId"
+                        + ",:EntryDateTime"
+                        + ",:UpdateUserId"
+                        + ",:UpdateDateTime"
+                        + ",:SalesId"
+                        + ")";
+
+                s2 = SqlStringUtil.parse(s2).
+                        setString("PeriodId", "1").
+                        setString("StockInDate", StockInDate).
+                        setString("StockInNumber", LastStockInNumber).
+                        setString("SupplierId", "23").
+                        setString("Remarks", "").
+                        setString("IsReturn", "0").
+                        setString("CollectionId", null).
+                        setString("PurchaseOrderId", null).
+                        setString("PreparedBy", "1").
+                        setString("CheckedBy", "1").
+                        setString("ApprovedBy", "1").
+                        setString("IsLocked", "-1").
+                        setString("EntryUserId", "1").
+                        setString("EntryDateTime", StockInDate).
+                        setString("UpdateUserId", "1").
+                        setString("UpdateDateTime", StockInDate).
+                        setString("SalesId", null).
+                        ok();
+                PreparedStatement stmt2 = conn2.prepareStatement(s2);
+                stmt2.execute();
+
+                String s18 = "select TOP 1 "
+                        + " Id"
+                        + " from dbo.TrnStockIn ORDER BY Id DESC "
+                        + " ";
+
+                Statement stmt18 = conn2.createStatement();
+                ResultSet rs18 = stmt18.executeQuery(s18);
+
+                String TrnStockInId = "0";
+                if (rs18.next()) {
+                    TrnStockInId = rs18.getString(1);
+                }
+
+                for (to_receipt_items to_receipt_items : to_receipt_items1) {
+                    //<editor-fold defaultstate="collapsed" desc=" TrnStockInLine ">
+                    if (send_sales_to_innosoft.equalsIgnoreCase("true")) {
+                        String s8 = "select "
+                                + " Id"
+                                + " ,OnHandQuantity"
+                                + " from dbo.MstItem where "
+                                + " ItemCode ='" + to_receipt_items.barcode + "'  "
+                                + " ";
+
+                        Statement stmt8 = conn2.createStatement();
+                        ResultSet rs8 = stmt8.executeQuery(s8);
+                        double product_qty2 = 0;
+                        String id1 = "0";
+                        if (rs8.next()) {
+                            product_qty2 = rs8.getDouble(2);
+                            id1 = rs8.getString(1);
+                        }
+
+                        String s6 = " insert into dbo.TrnStockInLine ("
+                                + " StockInId"
+                                + ",ItemId"
+                                + ",UnitId"
+                                + ",Quantity"
+                                + ",Cost"
+                                + ",Amount"
+                                + ",ExpiryDate"
+                                + ",LotNumber"
+                                + ",AssetAccountId"
+                                + ")values("
+                                + " :StockInId"
+                                + ",:ItemId"
+                                + ",:UnitId"
+                                + ",:Quantity"
+                                + ",:Cost"
+                                + ",:Amount"
+                                + ",:ExpiryDate"
+                                + ",:LotNumber"
+                                + ",:AssetAccountId"
+                                + ")";
+                        float q = Float.parseFloat("" + to_receipt_items.qty);
+                        float c = Float.parseFloat("" + to_receipt_items.cost);
+                        float a = Float.parseFloat("" + (q * c));
+
+                        s6 = SqlStringUtil.parse(s6).
+                                setString("StockInId", TrnStockInId).
+                                setString("ItemId", id1).
+                                setString("UnitId", "1").
+                                setString("Quantity", "" + q).
+                                setString("Cost", "" + c).
+                                setString("Amount", "" + a).
+                                setString("ExpiryDate", null).
+                                setString("LotNumber", null).
+                                setString("AssetAccountId", "74").
+                                ok();
+                        PreparedStatement stmt6 = conn2.prepareStatement(s6);
+                        System.out.println(s6);
+                        stmt6.execute();
+
+                        //<editor-fold defaultstate="collapsed" desc=" select MstIten OnHandQuantity ">
+                        double new_qty = product_qty2 + (to_receipt_items.conversion * to_receipt_items.qty);
+                        float new_qty1 = Float.parseFloat("" + new_qty);
+                        String s9 = " update dbo.MstItem set "
+                                + " OnHandQuantity='" + new_qty1 + "',cost='" + c + "' "
+                                + " where barcode = '" + to_receipt_items.barcode + "' "
+                                + "";
+                        PreparedStatement stmt9 = conn2.prepareStatement(s9);
+                        stmt9.execute();
+                        System.out.println(s9);
+                        //</editor-fold>
+                    }
+                }
+
+                Lg.s(S1_receipt_items.class, "Successfully Added Innosoft");
+            }
+            //</editor-fold>
+            //</editor-fold>
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -328,7 +573,7 @@ public class S1_receipt_items {
     public static void update_receipt_items(to_receipt_items to, double tendered_qty) {
         try {
             Connection conn = MyConnection.connect();
-            S1_items.to_items tt = S1_items.ret_data2(to.barcode,to.from_location_id);
+            S1_items.to_items tt = S1_items.ret_data2(to.barcode, to.from_location_id);
             double new_qty = (to.qty) - tendered_qty;
             new_qty = to.conversion * new_qty;
             new_qty = tt.product_qty - new_qty;
@@ -356,7 +601,7 @@ public class S1_receipt_items {
     public static void delete_receipt_items(to_receipt_items to, double tendered_qty) {
         try {
             Connection conn = MyConnection.connect();
-            S1_items.to_items tt = S1_items.ret_data2(to.barcode,to.from_location_id);
+            S1_items.to_items tt = S1_items.ret_data2(to.barcode, to.from_location_id);
             double new_qty = (to.qty) * to.conversion;
 //            new_qty = to.conversion * new_qty;
             new_qty = tt.product_qty - new_qty;
@@ -749,9 +994,7 @@ public class S1_receipt_items {
                 String from_location_id = rs.getString(26);
                 String to_location_name = rs.getString(27);
                 String to_location_id = rs.getString(28);
-                to_receipt_items to = new to_receipt_items(id, receipt_no, user_name, session_no, date_added, supplier, supllier_id, remarks, barcode, description
-                        , qty, cost, category, category_id, classification, classification_id, sub_class, sub_class_id, conversion, unit, date_delivered
-                        , date_received, status, reference_no, from_location_name, from_location_id, to_location_name, to_location_id);
+                to_receipt_items to = new to_receipt_items(id, receipt_no, user_name, session_no, date_added, supplier, supllier_id, remarks, barcode, description, qty, cost, category, category_id, classification, classification_id, sub_class, sub_class_id, conversion, unit, date_delivered, date_received, status, reference_no, from_location_name, from_location_id, to_location_name, to_location_id);
                 datas.add(to);
             }
             return datas;
@@ -774,7 +1017,7 @@ public class S1_receipt_items {
                 stmt.execute();
                 Lg.s(S1_receipt_items.class, "Successfully Added");
 
-                S1_items.to_items tt = S1_items.ret_data3(to_receipt_items.barcode, to_receipt_items.from_location_id);             
+                S1_items.to_items tt = S1_items.ret_data3(to_receipt_items.barcode, to_receipt_items.from_location_id);
                 double new_qty = tt.product_qty - (to_receipt_items.conversion * to_receipt_items.qty);
                 String s2 = "update items set "
                         + " product_qty='" + new_qty + "',cost='" + to_receipt_items.cost + "' "

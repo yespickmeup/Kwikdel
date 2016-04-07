@@ -1238,11 +1238,12 @@ public class Dlg_new_receipt extends javax.swing.JDialog {
         add_stocks_available();
     }
 
-    private void add_stocks_available(){
-        Dlg_stocks_available nd=new Dlg_stocks_available();
+    private void add_stocks_available() {
+        Dlg_stocks_available nd = new Dlg_stocks_available();
         jPanel13.setLayout(new BorderLayout());
         jPanel13.add(nd.getSurface());
     }
+
     private void set_default_location() {
         Field.Combo tf = (Field.Combo) jTextField7;
         S1_locations.to_locations def_location = get_default_location();
@@ -1304,6 +1305,7 @@ public class Dlg_new_receipt extends javax.swing.JDialog {
     }
 
     List<S1_items.to_items> item_list = new ArrayList();
+
     private void init_items() {
         Field.Combo loc = (Field.Combo) jTextField7;
         System.out.println("From Location: " + loc.getId());
@@ -1583,7 +1585,6 @@ public class Dlg_new_receipt extends javax.swing.JDialog {
         String to_location_id = "";
         S1_receipts.to_receipts receipt = new S1_receipts.to_receipts(id, receipt_no, user_name, session_no, date_added, supplier, supllier_id, remarks, date_delivered, date_received, status, reference_no, from_location_name, from_location_id, to_location_name, to_location_id);
         List<to_receipt_items> items = tbl_receipt_items_ALM;
-        S1_receipts.add_receipts(receipt);
         S1_receipt_items.add_receipt_items(items, receipt);
         tbl_receipt_items_ALM.clear();
         tbl_receipt_items_M.fireTableDataChanged();

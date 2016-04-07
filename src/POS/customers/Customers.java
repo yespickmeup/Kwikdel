@@ -4,13 +4,18 @@
  */
 package POS.customers;
 
+import POS.innosoft.Items;
+import POS.items.S1_items;
+import POS.util.DateType;
 import POS.util.MyConnection;
+import POS.util.MyConnectionInnosoft;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import mijzcx.synapse.desk.utils.Lg;
 import mijzcx.synapse.desk.utils.ReceiptIncrementor;
@@ -20,7 +25,7 @@ import mijzcx.synapse.desk.utils.SqlStringUtil;
  *
  * @author Maytopacka
  */
-public class S1_customers {
+public class Customers {
 
     public static class to_customers {
 
@@ -113,7 +118,7 @@ public class S1_customers {
 
             PreparedStatement stmt = conn.prepareStatement(s0);
             stmt.execute();
-            Lg.s(S1_customers.class, "Successfully Added");
+            Lg.s(Customers.class, "Successfully Added");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -158,7 +163,7 @@ public class S1_customers {
             System.out.println("" + to_customers.location);
             PreparedStatement stmt = conn.prepareStatement(s0);
             stmt.execute();
-            Lg.s(S1_customers.class, "Successfully Updated");
+            Lg.s(Customers.class, "Successfully Updated");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -175,7 +180,7 @@ public class S1_customers {
 
             PreparedStatement stmt = conn.prepareStatement(s0);
             stmt.execute();
-            Lg.s(S1_customers.class, "Successfully Deleted");
+            Lg.s(Customers.class, "Successfully Deleted");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -225,8 +230,8 @@ public class S1_customers {
                 String first_name = rs.getString(12);
                 String last_name = rs.getString(13);
                 String mi = rs.getString(14);
-                double deposit=rs.getDouble(15);
-                to_customers to = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,deposit);
+                double deposit = rs.getDouble(15);
+                to_customers to = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi, deposit);
                 datas.add(to);
             }
             return datas;
@@ -278,8 +283,8 @@ public class S1_customers {
                 String first_name = rs.getString(12);
                 String last_name = rs.getString(13);
                 String mi = rs.getString(14);
-                double deposit=rs.getDouble(15);
-                to_customers to = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,deposit);
+                double deposit = rs.getDouble(15);
+                to_customers to = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi, deposit);
                 datas.add(to);
             }
             return datas;
@@ -340,4 +345,217 @@ public class S1_customers {
             MyConnection.close();
         }
     }
+
+    public static void update_innosoft() {
+        String where = " order by last_name asc ";
+        List<Customers.to_customers> customers = Customers.ret_data2(where);
+        System.out.println("Total Items: " + customers.size());
+        try {
+            Connection conn = MyConnectionInnosoft.connect();
+
+            String datetime = DateType.datetime2.format(new Date());
+            conn.createStatement().execute("set ansi_warnings off"
+            );
+            String s2 = "delete from dbo.MstCustomer where Customer not like '%Walkin%' ";
+            PreparedStatement stmt = conn.prepareStatement(s2);
+            stmt.execute();
+            Lg.s(S1_items.class, "Successfully Deleted");
+
+            for (Customers.to_customers customer : customers) {
+
+                String s0 = " insert into dbo.MstCustomer ("
+                        + " Customer"
+                        + ",Address"
+                        + ",ContactPerson"
+                        + ",ContactNumber"
+                        + ",CreditLimit"
+                        + ",TermId"
+                        + ",TIN"
+                        + ",WithReward"
+                        + ",RewardNumber"
+                        + ",RewardConversion"
+                        + ",AccountId"
+                        + ",EntryUserId"
+                        + ",EntryDateTime"
+                        + ",UpdateUserId"
+                        + ",UpdateDateTime"
+                        + ",IsLocked"
+                        + ",DefaultPriceDescription"
+                        + ")values("
+                        + " :Customer"
+                        + ",:Address"
+                        + ",:ContactPerson"
+                        + ",:ContactNumber"
+                        + ",:CreditLimit"
+                        + ",:TermId"
+                        + ",:TIN"
+                        + ",:WithReward"
+                        + ",:RewardNumber"
+                        + ",:RewardConversion"
+                        + ",:AccountId"
+                        + ",:EntryUserId"
+                        + ",:EntryDateTime"
+                        + ",:UpdateUserId"
+                        + ",:UpdateDateTime"
+                        + ",:IsLocked"
+                        + ",:DefaultPriceDescription"
+                        + ")";
+                String name = customer.first_name + " " + customer.mi + " " + customer.last_name;
+                String address = customer.address;
+                String contact = customer.contact_no;
+
+                if (name != null) {
+                    name = name.replaceAll(",", "'.");
+                    name = name.replaceAll("'", ".");
+                    name = name.replaceAll("-", ".");
+                } else {
+                    name = "";
+                }
+                if (address != null) {
+                    address = address.replaceAll("'", ".");
+                    address = address.replaceAll(",", ".");
+                    address = address.replaceAll("-", ".");
+                } else {
+                    address = "";
+                }
+                if (contact != null) {
+                    contact = contact.replaceAll("'", ".");
+                    contact = contact.replaceAll(",", ".");
+                    contact = contact.replaceAll("-", ".");
+                } else {
+                    contact = "";
+                }
+
+                s0 = SqlStringUtil.parse(s0).
+                        setString("Customer", name).
+                        setString("Address", address).
+                        setString("ContactPerson", name).
+                        setString("ContactNumber", contact).
+                        setString("CreditLimit", "1000000000.00000").
+                        setString("TermId", "7").
+                        setString("TIN", "NA").
+                        setString("WithReward", "1").
+                        setString("RewardNumber", "1").
+                        setString("RewardConversion", "0.00000").
+                        setString("AccountId", "64").
+                        setString("EntryUserId", "1").
+                        setString("EntryDateTime", datetime).
+                        setString("UpdateUserId", "1").
+                        setString("UpdateDateTime", datetime).
+                        setString("IsLocked", "1").
+                        setString("DefaultPriceDescription", "").
+                        ok();
+                System.out.println(s0);
+                PreparedStatement stmt2 = conn.prepareStatement(s0);
+                stmt2.execute();
+            }
+            conn.createStatement().execute("set ansi_warnings on"
+            );
+            Lg.s(Items.class, "Successfully Added");
+
+        } catch (SQLException e) {
+            System.out.println("DB error : " + e);
+        }
+    }
+
+    public static void add_customer_innosoft(to_customers customer) {
+        try {
+            Connection conn = MyConnectionInnosoft.connect();
+            String datetime = DateType.datetime2.format(new Date());
+            conn.createStatement().execute("set ansi_warnings off");
+            String s0 = " insert into dbo.MstCustomer ("
+                    + " Customer"
+                    + ",Address"
+                    + ",ContactPerson"
+                    + ",ContactNumber"
+                    + ",CreditLimit"
+                    + ",TermId"
+                    + ",TIN"
+                    + ",WithReward"
+                    + ",RewardNumber"
+                    + ",RewardConversion"
+                    + ",AccountId"
+                    + ",EntryUserId"
+                    + ",EntryDateTime"
+                    + ",UpdateUserId"
+                    + ",UpdateDateTime"
+                    + ",IsLocked"
+                    + ",DefaultPriceDescription"
+                    + ")values("
+                    + " :Customer"
+                    + ",:Address"
+                    + ",:ContactPerson"
+                    + ",:ContactNumber"
+                    + ",:CreditLimit"
+                    + ",:TermId"
+                    + ",:TIN"
+                    + ",:WithReward"
+                    + ",:RewardNumber"
+                    + ",:RewardConversion"
+                    + ",:AccountId"
+                    + ",:EntryUserId"
+                    + ",:EntryDateTime"
+                    + ",:UpdateUserId"
+                    + ",:UpdateDateTime"
+                    + ",:IsLocked"
+                    + ",:DefaultPriceDescription"
+                    + ")";
+            String name = customer.first_name + " " + customer.mi + " " + customer.last_name;
+            String address = customer.address;
+            String contact = customer.contact_no;
+
+            if (name != null) {
+                name = name.replaceAll(",", "'.");
+                name = name.replaceAll("'", ".");
+                name = name.replaceAll("-", ".");
+            } else {
+                name = "";
+            }
+            if (address != null) {
+                address = address.replaceAll("'", ".");
+                address = address.replaceAll(",", ".");
+                address = address.replaceAll("-", ".");
+            } else {
+                address = "";
+            }
+            if (contact != null) {
+                contact = contact.replaceAll("'", ".");
+                contact = contact.replaceAll(",", ".");
+                contact = contact.replaceAll("-", ".");
+            } else {
+                contact = "";
+            }
+
+            s0 = SqlStringUtil.parse(s0).
+                    setString("Customer", name).
+                    setString("Address", address).
+                    setString("ContactPerson", name).
+                    setString("ContactNumber", contact).
+                    setString("CreditLimit", "1000000000.00000").
+                    setString("TermId", "7").
+                    setString("TIN", "NA").
+                    setString("WithReward", "1").
+                    setString("RewardNumber", "1").
+                    setString("RewardConversion", "0.00000").
+                    setString("AccountId", "64").
+                    setString("EntryUserId", "1").
+                    setString("EntryDateTime", datetime).
+                    setString("UpdateUserId", "1").
+                    setString("UpdateDateTime", datetime).
+                    setString("IsLocked", "1").
+                    setString("DefaultPriceDescription", "").
+                    ok();
+            System.out.println(s0);
+            PreparedStatement stmt2 = conn.prepareStatement(s0);
+            stmt2.execute();
+
+            conn.createStatement().execute("set ansi_warnings on");
+            Lg.s(Customers.class, "Successfully Added");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            MyConnection.close();
+        }
+    }
+
 }

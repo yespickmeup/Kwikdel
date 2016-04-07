@@ -10,7 +10,7 @@ import POS.accounts_receivable.S1_accounts_receivable;
 import POS.customers.Dlg_customer_accounts;
 import POS.customers.Dlg_customer_sales;
 import POS.customers.Dlg_customers;
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.deposits.Dlg_deposits;
 import POS.items.S1_items;
 import POS.locations.S1_locations;
@@ -1506,7 +1506,7 @@ public class Dlg_delivery extends javax.swing.JDialog {
 
     private void init_key() {
         KeyMapping.mapKeyWIFW(getSurface(),
-                              KeyEvent.VK_ESCAPE, new KeyAction() {
+                KeyEvent.VK_ESCAPE, new KeyAction() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1675,16 +1675,16 @@ public class Dlg_delivery extends javax.swing.JDialog {
         nd.setLocationRelativeTo(this);
         nd.setVisible(true);
     }
-    List<S1_customers.to_customers> customer_list = new ArrayList();
+    List<Customers.to_customers> customer_list = new ArrayList();
 
     private void init_customers() {
         String search = jTextField2.getText();
         customer_list.clear();
         String where = " where customer_name like '%" + search + "%' order by customer_name asc";
-        customer_list = S1_customers.ret_data2(where);
+        customer_list = Customers.ret_data2(where);
         Object[][] obj = new Object[customer_list.size()][1];
         int i = 0;
-        for (S1_customers.to_customers to : customer_list) {
+        for (Customers.to_customers to : customer_list) {
             obj[i][0] = to.first_name + " " + to.last_name;
             i++;
         }
@@ -1697,7 +1697,7 @@ public class Dlg_delivery extends javax.swing.JDialog {
         tr.setCallback(new TableRenderer.Callback() {
             @Override
             public void ok(TableRenderer.OutputData data) {
-                S1_customers.to_customers to = customer_list.get(data.selected_row);
+                Customers.to_customers to = customer_list.get(data.selected_row);
                 jTextField2.setText(to.first_name + " " + to.last_name);
                 jTextField9.setText("" + to.id);
                 lbl_trans_type.grabFocus();
@@ -2284,63 +2284,56 @@ public class Dlg_delivery extends javax.swing.JDialog {
 
     private void data_cols() {
 
-        Thread t2 = new Thread(new Runnable() {
+        String where = "";
+        String from = DateType.sf.format(jDateChooser1.getDate());
+        String to = DateType.sf.format(jDateChooser2.getDate());
 
-            @Override
-            public void run() {
-                String where = "";
-                String from = DateType.sf.format(jDateChooser1.getDate());
-                String to = DateType.sf.format(jDateChooser2.getDate());
+        if (jCheckBox2.isSelected()) {
+            where = " where status>1";
+        }
+        if (jCheckBox3.isSelected()) {
+            where = " where status=5";
+        }
+        if (jCheckBox10.isSelected()) {
+            where = " where status=6";
+        }
+        if (jCheckBox4.isSelected()) {
+            where = " where status=7";
+        }
+        if (jCheckBox5.isSelected()) {
+            where = " where status=8";
+        }
+        if (jCheckBox6.isSelected()) {
+            where = " where status=9";
+        }
 
-                if (jCheckBox2.isSelected()) {
-                    where = " where status>1";
-                }
-                if (jCheckBox3.isSelected()) {
-                    where = " where status=5";
-                }
-                if (jCheckBox10.isSelected()) {
-                    where = " where status=6";
-                }
-                if (jCheckBox4.isSelected()) {
-                    where = " where status=7";
-                }
-                if (jCheckBox5.isSelected()) {
-                    where = " where status=8";
-                }
-                if (jCheckBox6.isSelected()) {
-                    where = " where status=9";
-                }
+        where = where + " and charge_status=0";
+        if (jCheckBox1.isSelected()) {
+            where = where + " and Date(date_added) between '" + from + "' and '" + to + "' ";
+        }
 
-                where = where + " and charge_status=0";
-                if (jCheckBox1.isSelected()) {
-                    where = where + " and Date(date_added) between '" + from + "' and '" + to + "' ";
-                }
-
-                if (jCheckBox7.isSelected()) {
-                    where = where + " and customer_name like '%" + jTextField8.getText() + "%' ";
-                }
-                if (jCheckBox8.isSelected()) {
-                    where = where + " and vehicle_name like '%" + jTextField8.getText() + "%' ";
-                }
-                if (jCheckBox9.isSelected()) {
-                    where = where + " and driver_name like '%" + jTextField8.getText() + "%' ";
-                }
-                where = where + " order by or_no asc";
-                System.out.println(where);
-                List<to_sales> datas = S1_sales.ret_data(where);
-                List<S1_sales.to_sales> datas2 = S1_sales_dr.ret_data2(where);
-                datas.addAll(datas2);
-                loadData_sales(datas);
-                double amount = 0;
-                for (to_sales t : datas) {
-                    amount += t.amount_due;
+        if (jCheckBox7.isSelected()) {
+            where = where + " and customer_name like '%" + jTextField8.getText() + "%' ";
+        }
+        if (jCheckBox8.isSelected()) {
+            where = where + " and vehicle_name like '%" + jTextField8.getText() + "%' ";
+        }
+        if (jCheckBox9.isSelected()) {
+            where = where + " and driver_name like '%" + jTextField8.getText() + "%' ";
+        }
+        where = where + " order by or_no asc";
+        System.out.println(where);
+        List<to_sales> datas = S1_sales.ret_data(where);
+        List<S1_sales.to_sales> datas2 = S1_sales_dr.ret_data2(where);
+        datas.addAll(datas2);
+        loadData_sales(datas);
+        double amount = 0;
+        for (to_sales t : datas) {
+            amount += t.amount_due;
 //              
-                }
-                jLabel21.setText("" + tbl_sales_ALM.size());
-                jLabel22.setText(FitIn.fmt_wc_0(amount));
-            }
-        });
-        t2.start();
+        }
+        jLabel21.setText("" + tbl_sales_ALM.size());
+        jLabel22.setText(FitIn.fmt_wc_0(amount));
 
     }
 
@@ -2357,44 +2350,39 @@ public class Dlg_delivery extends javax.swing.JDialog {
             jButton3.setEnabled(false);
             data_cols_items();
             prompt_update_sales();
-        } else {
-            if (col > -6 && col <= 10) {
-                if (col == 6) {
-                    status = 5;
-                }
-                if (col == 7) {
-                    status = 6;
-                }
-
-                if (col == 8) {
-                    status = 7;
-                }
-                if (col == 9) {
-                    status = 8;
-                }
-                if (col == 10) {
-                    status = 9;
-                }
-                to_sales to = (to_sales) tbl_sales_ALM.get(tbl_sales.convertRowIndexToModel(row));
-                if (to.sales_no.startsWith("DR")) {
-                    S1_sales_dr.edit_status(to, status);
-                } else {
-                    S1_sales.edit_status(to, status);
-                }
-                data_cols();
-            } else {
-                if (col == 11) {
-                    to_sales to = (to_sales) tbl_sales_ALM.get(tbl_sales.convertRowIndexToModel(row));
-                    if (to.selected == true) {
-                        to.setSelected(false);
-                    } else {
-                        to.setSelected(true);
-                    }
-
-                    tbl_sales_M.fireTableDataChanged();
-                }
+        } else if (col > -6 && col <= 10) {
+            if (col == 6) {
+                status = 5;
+            }
+            if (col == 7) {
+                status = 6;
             }
 
+            if (col == 8) {
+                status = 7;
+            }
+            if (col == 9) {
+                status = 8;
+            }
+            if (col == 10) {
+                status = 9;
+            }
+            to_sales to = (to_sales) tbl_sales_ALM.get(tbl_sales.convertRowIndexToModel(row));
+            if (to.sales_no.startsWith("DR")) {
+                S1_sales_dr.edit_status(to, status);
+            } else {
+                S1_sales.edit_status(to, status);
+            }
+            data_cols();
+        } else if (col == 11) {
+            to_sales to = (to_sales) tbl_sales_ALM.get(tbl_sales.convertRowIndexToModel(row));
+            if (to.selected == true) {
+                to.setSelected(false);
+            } else {
+                to.setSelected(true);
+            }
+
+            tbl_sales_M.fireTableDataChanged();
         }
 
     }
@@ -2940,7 +2928,7 @@ public class Dlg_delivery extends javax.swing.JDialog {
     }
 
     private void prompt_customer() {
-            
+
     }
 
     private void on_account_payment() {

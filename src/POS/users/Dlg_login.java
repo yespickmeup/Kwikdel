@@ -12,6 +12,7 @@ import POS.util.DateType;
 import POS.util.Users;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +35,6 @@ public class Dlg_login extends javax.swing.JDialog {
 
     public void setCallback(Callback callback) {
         this.callback = callback;
-
 
     }
 
@@ -149,7 +149,6 @@ public class Dlg_login extends javax.swing.JDialog {
             throw new RuntimeException(e);
         }
 
-
         Dlg_login dialog = Dlg_login.create(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
 
@@ -167,7 +166,6 @@ public class Dlg_login extends javax.swing.JDialog {
             myInit();
             repaint();
         }
-
 
     }
 
@@ -379,7 +377,7 @@ public class Dlg_login extends javax.swing.JDialog {
 
     private void init_key() {
         KeyMapping.mapKeyWIFW(getSurface(),
-                KeyEvent.VK_ESCAPE, new KeyAction() {
+                              KeyEvent.VK_ESCAPE, new KeyAction() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -388,8 +386,33 @@ public class Dlg_login extends javax.swing.JDialog {
                 System.exit(1);
             }
         });
+        tf_username.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_F5) {
+                    check_innosoft();
+                }
+            }
+        });
+
     }
     // </editor-fold>
+
+    private void check_innosoft() {
+        Window p = (Window) this;
+        Dlg_check_innosoft nd = Dlg_check_innosoft.create(p, true);
+        nd.setTitle("");
+        nd.setCallback(new Dlg_check_innosoft.Callback() {
+
+            @Override
+            public void ok(CloseDialog closeDialog, Dlg_check_innosoft.OutputData data) {
+                closeDialog.ok();
+
+            }
+        });
+        nd.setLocationRelativeTo(this);
+        nd.setVisible(true);
+    }
 
     private void ok1() {
         final String user_name = tf_username.getText();
@@ -419,7 +442,7 @@ public class Dlg_login extends javax.swing.JDialog {
             Users.setM_discount(to.m_discount);
             Users.setM_banks(to.m_banks);
             Users.setR_stock_left_supplier(to.r_stock_left_supplier);
-            Users.setT_inventory_adjuster(to.t_inventory_adjuster);          
+            Users.setT_inventory_adjuster(to.t_inventory_adjuster);
             if (to.user_level == 1) {
                 S1_cash_drawer.to_cash_drawer to1 = S1_cash_drawer.ret_data2(user_name, date);
                 if (to1 == null) {
@@ -437,14 +460,13 @@ public class Dlg_login extends javax.swing.JDialog {
                             String time_in = DateType.datetime.format(new Date());
                             String time_out = null;
                             double amount = data.amount;
-                            S1_cash_drawer.to_cash_drawer to2 = new S1_cash_drawer.to_cash_drawer(id, session_no, user_name1, screen_name1, time_in
-                                    , time_out, amount, 0, 0, 0, 0, 0, 0, 0, 0, new ArrayList(), new ArrayList(),0);
+                            S1_cash_drawer.to_cash_drawer to2 = new S1_cash_drawer.to_cash_drawer(id, session_no, user_name1, screen_name1, time_in, time_out, amount, 0, 0, 0, 0, 0, 0, 0, 0, new ArrayList(), new ArrayList(), 0);
                             S1_cash_drawer.add_cash_drawer(to2);
                             Users.setSession_no(session_no);
                             Users.setScreen_name(screen_name1);
                             Users.setUser_level(to.user_level);
                             Users.setUser_name(user_name);
-                            to_cash_drawer.setAmount(amount);                          
+                            to_cash_drawer.setAmount(amount);
                             Users.setTime_in(time_in);
                             ok2();
                         }

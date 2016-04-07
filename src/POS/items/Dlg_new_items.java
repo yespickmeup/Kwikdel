@@ -792,7 +792,7 @@ public class Dlg_new_items extends javax.swing.JDialog {
 
     private void init_key() {
         KeyMapping.mapKeyWIFW(getSurface(),
-                              KeyEvent.VK_ESCAPE, new KeyAction() {
+                KeyEvent.VK_ESCAPE, new KeyAction() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -974,12 +974,18 @@ public class Dlg_new_items extends javax.swing.JDialog {
         String location_name = "";
         String location_id = "";
         S1_new_items.to_items to = new S1_new_items.to_items(id, barcode, description, generic_name, category, category_id, classification, classification_id,
-                                                             sub_classification, sub_classification_id, product_qty, unit, conversion, selling_price, date_added, user_name, item_type, status, supplier, fixed_price, cost, supplier_id, multi_level_pricing, vatable, reorder_level, location_name, location_id);
+                sub_classification, sub_classification_id, product_qty, unit, conversion, selling_price, date_added, user_name, item_type, status, supplier, fixed_price, cost, supplier_id, multi_level_pricing, vatable, reorder_level, location_name, location_id);
         S1_new_items.add_data(to);
-        int connected = MyConnectionInnosoft.check_connection();
-        if (connected == 1) {
-            Items.add_item(to);
+        String send_sales_to_innosoft = System.getProperty("send_sales_to_innosoft", "false");
+        System.out.println("Send to Innosoft: " + send_sales_to_innosoft);
+        String LastStockInNumber = "";
+        if (send_sales_to_innosoft.equalsIgnoreCase("true")) {
+            int connected = MyConnectionInnosoft.check_connection();
+            if (connected == 1) {
+                Items.add_item(to);
+            }
         }
+
         data_cols();
         Alert.set(1, "");
         jTextField2.grabFocus();
@@ -1079,12 +1085,18 @@ public class Dlg_new_items extends javax.swing.JDialog {
         String location_id = "";
 
         S1_new_items.to_items to = new S1_new_items.to_items(id, barcode, description, generic_name, category, category_id, classification, classification_id,
-                                                             sub_classification, sub_classification_id, product_qty, unit, conversion, selling_price, date_added, user_name, item_type, status, supplier, fixed_price, cost, supplier_id, multi_level_pricing, vatable, reorder_level, location_name, location_id);
+                sub_classification, sub_classification_id, product_qty, unit, conversion, selling_price, date_added, user_name, item_type, status, supplier, fixed_price, cost, supplier_id, multi_level_pricing, vatable, reorder_level, location_name, location_id);
         S1_new_items.update_data(to);
-        int connected = MyConnectionInnosoft.check_connection();
-        if (connected == 1) {
-            Items.update_item(to);
+        String send_sales_to_innosoft = System.getProperty("send_sales_to_innosoft", "false");
+        System.out.println("Send to Innosoft: " + send_sales_to_innosoft);
+        String LastStockInNumber = "";
+        if (send_sales_to_innosoft.equalsIgnoreCase("true")) {
+            int connected = MyConnectionInnosoft.check_connection();
+            if (connected == 1) {
+                Items.update_item(to);
+            }
         }
+
         data_cols();
         Alert.set(2, "");
         jTextField2.grabFocus();
@@ -1107,10 +1119,16 @@ public class Dlg_new_items extends javax.swing.JDialog {
                 closeDialog.ok();
                 S1_new_items.to_items to = (S1_new_items.to_items) tbl_items_ALM.get(row);
                 S1_new_items.delete_data(to);
-                int connected = MyConnectionInnosoft.check_connection();
-                if (connected == 1) {
-                    Items.delete_items(to);
+                String send_sales_to_innosoft = System.getProperty("send_sales_to_innosoft", "false");
+                System.out.println("Send to Innosoft: " + send_sales_to_innosoft);
+                String LastStockInNumber = "";
+                if (send_sales_to_innosoft.equalsIgnoreCase("true")) {
+                    int connected = MyConnectionInnosoft.check_connection();
+                    if (connected == 1) {
+                        Items.delete_items(to);
+                    }
                 }
+
                 data_cols();
                 Alert.set(3, "");
                 jTextField2.grabFocus();
@@ -1118,7 +1136,7 @@ public class Dlg_new_items extends javax.swing.JDialog {
         });
         nd.setLocationRelativeTo(this);
         nd.setVisible(true);
-
+        
     }
 
     private void update_innosoft() {

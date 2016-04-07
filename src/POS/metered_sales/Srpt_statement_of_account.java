@@ -5,7 +5,7 @@
  */
 package POS.metered_sales;
 
-import POS.customers.S1_customers.to_customers;
+import POS.customers.Customers.to_customers;
 import POS.util.MyConnection;
 import java.io.InputStream;
 import java.sql.Connection;

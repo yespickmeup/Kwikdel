@@ -5,7 +5,7 @@
  */
 package POS.reports;
 
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.reports.Srpt_ar_aging;
 import POS.util.DateType;
 import POS.util.DateUtils1;
@@ -758,15 +758,15 @@ public class Dlg_report_customers extends javax.swing.JDialog {
             box.transferFocus();
         }
     }
-    List<S1_customers.to_customers> customer_list = new ArrayList();
+    List<Customers.to_customers> customer_list = new ArrayList();
 
     private void init_customers(final JTextField tf1, final JTextField tf2) {
         String search = tf1.getText();
         customer_list.clear();
-        customer_list = S1_customers.ret_data(search);
+        customer_list = Customers.ret_data(search);
         Object[][] obj = new Object[customer_list.size()][2];
         int i = 0;
-        for (S1_customers.to_customers to : customer_list) {
+        for (Customers.to_customers to : customer_list) {
             obj[i][0] = to.id;
             obj[i][1] = to.first_name + " " + to.last_name;
             i++;
@@ -782,7 +782,7 @@ public class Dlg_report_customers extends javax.swing.JDialog {
         tr.setCallback(new TableRenderer.Callback() {
             @Override
             public void ok(TableRenderer.OutputData data) {
-                S1_customers.to_customers to = customer_list.get(data.selected_row);
+                Customers.to_customers to = customer_list.get(data.selected_row);
                 tf1.setText("" + to.first_name + " " + to.last_name);
                 tf2.setText("" + to.id);
                 get_customers();
@@ -938,15 +938,15 @@ public class Dlg_report_customers extends javax.swing.JDialog {
         }
     }
 
-    List<S1_customers.to_customers> customer_list2 = new ArrayList();
+    List<Customers.to_customers> customer_list2 = new ArrayList();
 
     private void init_customers_ledger(final JTextField tf1, final JTextField tf2) {
         String search = tf1.getText();
         customer_list2.clear();
-        customer_list2 = S1_customers.ret_data(search);
+        customer_list2 = Customers.ret_data(search);
         Object[][] obj = new Object[customer_list2.size()][3];
         int i = 0;
-        for (S1_customers.to_customers to : customer_list2) {
+        for (Customers.to_customers to : customer_list2) {
             obj[i][0] = to.id;
             obj[i][1] = to.first_name + " " + to.last_name;
             obj[i][2] = FitIn.fmt_wc_0(to.balance);
@@ -963,7 +963,7 @@ public class Dlg_report_customers extends javax.swing.JDialog {
         tr.setCallback(new TableRenderer.Callback() {
             @Override
             public void ok(TableRenderer.OutputData data) {
-                S1_customers.to_customers to = customer_list2.get(data.selected_row);
+                Customers.to_customers to = customer_list2.get(data.selected_row);
                 tf1.setText("" + to.first_name + " " + to.last_name);
                 tf2.setText("" + to.id);
                 get_customers_ledger(to.balance);
@@ -971,15 +971,15 @@ public class Dlg_report_customers extends javax.swing.JDialog {
         });
     }
 
-    List<S1_customers.to_customers> customer_list3 = new ArrayList();
+    List<Customers.to_customers> customer_list3 = new ArrayList();
 
     private void init_customers_aging(final JTextField tf1, final JTextField tf2) {
         String search = tf1.getText();
         customer_list3.clear();
-        customer_list3 = S1_customers.ret_data(search);
+        customer_list3 = Customers.ret_data(search);
         Object[][] obj = new Object[customer_list3.size()][3];
         int i = 0;
-        for (S1_customers.to_customers to : customer_list3) {
+        for (Customers.to_customers to : customer_list3) {
             obj[i][0] = to.id;
             obj[i][1] = to.first_name + " " + to.last_name;
             obj[i][2] = FitIn.fmt_wc_0(to.balance);
@@ -996,7 +996,7 @@ public class Dlg_report_customers extends javax.swing.JDialog {
         tr.setCallback(new TableRenderer.Callback() {
             @Override
             public void ok(TableRenderer.OutputData data) {
-                S1_customers.to_customers to = customer_list3.get(data.selected_row);
+                Customers.to_customers to = customer_list3.get(data.selected_row);
                 tf1.setText("" + to.customer_name);
                 tf2.setText("" + to.id);
                 get_customers_aging();

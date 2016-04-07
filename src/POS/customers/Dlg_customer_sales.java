@@ -864,7 +864,7 @@ public class Dlg_customer_sales extends javax.swing.JDialog {
         t2.start();
     }
 
-    List<S1_customers.to_customers> customer_list = new ArrayList();
+    List<Customers.to_customers> customer_list = new ArrayList();
 
     private void init_customers() {
 
@@ -874,10 +874,10 @@ public class Dlg_customer_sales extends javax.swing.JDialog {
                 String search = jTextField1.getText();
                 customer_list.clear();
                 String where = " where last_name like '%" + search + "%' or first_name like '%" + search + "%' order by last_name asc";
-                customer_list = S1_customers.ret_data2(where);
+                customer_list = Customers.ret_data2(where);
                 Object[][] obj = new Object[customer_list.size()][2];
                 int i = 0;
-                for (S1_customers.to_customers to : customer_list) {
+                for (Customers.to_customers to : customer_list) {
                     obj[i][0] = to.first_name + " " + to.last_name;
                     obj[i][1] = to.address;
                     i++;
@@ -891,7 +891,7 @@ public class Dlg_customer_sales extends javax.swing.JDialog {
                 tr.setCallback(new TableRenderer.Callback() {
                     @Override
                     public void ok(TableRenderer.OutputData data) {
-                        S1_customers.to_customers to = customer_list.get(data.selected_row);
+                        Customers.to_customers to = customer_list.get(data.selected_row);
                         jTextField1.setText(to.first_name + " " + to.last_name);
                         jTextField2.setText("" + to.id);
                         data_cols();

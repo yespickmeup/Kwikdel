@@ -64,8 +64,8 @@ public class S2_customers {
             String last_name=to.last_name;
             String mi=to.mi;
             
-            S1_customers.to_customers to1=new S1_customers.to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,0);
-            S1_customers.add_customers(to1);
+            Customers.to_customers to1=new Customers.to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,0);
+            Customers.add_customers(to1);
         }
     }
 

@@ -5,7 +5,7 @@
  */
 package POS.delivery;
 
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.discount_customers.S1_discount_customers;
 import POS.discounts.S1_discounts;
 import POS.sales.S1_sales.to_sales;
@@ -797,16 +797,16 @@ public class Dlg_delivery_update extends javax.swing.JDialog {
         });
     }
 
-    List<S1_customers.to_customers> customer_list = new ArrayList();
+    List<Customers.to_customers> customer_list = new ArrayList();
 
     private void init_customers() {
         String search = tf_customer_name.getText();
         customer_list.clear();
         String where = " where customer_name like '%" + search + "%' or last_name like '%" + search + "%' or first_name like '%" + search + "%' order by customer_name asc";
-        customer_list = S1_customers.ret_data2(where);
+        customer_list = Customers.ret_data2(where);
         Object[][] obj = new Object[customer_list.size()][1];
         int i = 0;
-        for (S1_customers.to_customers to : customer_list) {
+        for (Customers.to_customers to : customer_list) {
             obj[i][0] = to.first_name + " " + to.last_name;
             i++;
         }
@@ -819,7 +819,7 @@ public class Dlg_delivery_update extends javax.swing.JDialog {
         tr.setCallback(new TableRenderer.Callback() {
             @Override
             public void ok(TableRenderer.OutputData data) {
-                S1_customers.to_customers to = customer_list.get(data.selected_row);
+                Customers.to_customers to = customer_list.get(data.selected_row);
                 tf_customer_name.setText(to.first_name + " " + to.last_name);
                 tf_customer_id.setText("" + to.id);
                 tf_customer_address.setText(to.address);

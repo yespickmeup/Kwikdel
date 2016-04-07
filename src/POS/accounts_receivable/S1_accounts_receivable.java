@@ -5,7 +5,7 @@
 package POS.accounts_receivable;
 
 import static POS.accounts_receivable.S1_accounts_receivable_payments.ret_customer_balance;
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.main.Main;
 import POS.sales.S1_sales;
 import POS.util.MyConnection;
@@ -160,7 +160,7 @@ public class S1_accounts_receivable {
             stmt.execute();
             Lg.s(S1_accounts_receivable.class, "Successfully Added");
 
-            S1_customers.to_customers cus = ret_customer_balance(to_accounts_receivable.customer_id);
+            Customers.to_customers cus = ret_customer_balance(to_accounts_receivable.customer_id);
             double new_balance = cus.balance + to_accounts_receivable.amount;
             String s2 = "update customers set "
                     + "balance= :balance"
@@ -181,8 +181,8 @@ public class S1_accounts_receivable {
         }
     }
 
-    public static S1_customers.to_customers ret_customer_balance(String account_id) {
-        S1_customers.to_customers to1 = null;
+    public static Customers.to_customers ret_customer_balance(String account_id) {
+        Customers.to_customers to1 = null;
 
         try {
             Connection conn = MyConnection.connect();
@@ -224,7 +224,7 @@ public class S1_accounts_receivable {
                 String last_name = rs.getString(13);
                 String mi = rs.getString(14);
                 double deposit=rs.getDouble(15);
-                to1 = new S1_customers.to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,deposit);
+                to1 = new Customers.to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,deposit);
             }
             return to1;
         } catch (SQLException e) {
@@ -280,7 +280,7 @@ public class S1_accounts_receivable {
             stmt.execute();
             Lg.s(S1_accounts_receivable.class, "Successfully Updated");
 
-            S1_customers.to_customers cus = S1_accounts_receivable.ret_customer_balance(to_accounts_receivable.customer_id);
+            Customers.to_customers cus = S1_accounts_receivable.ret_customer_balance(to_accounts_receivable.customer_id);
             double total = previous_amount - new_amount;
             double new_balance = (cus.balance - previous_amount) + (to_accounts_receivable.amount);
             System.out.println(cus.balance + " - " + previous_amount + " = " + to_accounts_receivable.amount);
@@ -313,7 +313,7 @@ public class S1_accounts_receivable {
             stmt.execute();
             Lg.s(S1_accounts_receivable.class, "Successfully Deleted");
 
-            S1_customers.to_customers cus = ret_customer_balance(to_accounts_receivable.customer_id);
+            Customers.to_customers cus = ret_customer_balance(to_accounts_receivable.customer_id);
             double total = cus.balance - to_accounts_receivable.amount + to_accounts_receivable.paid;
             String s2 = "update  customers set "
                     + "balance= :balance"

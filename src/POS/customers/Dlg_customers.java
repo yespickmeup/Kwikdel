@@ -4,12 +4,17 @@
  */
 package POS.customers;
 
-import POS.customers.S1_customers.to_customers;
+import POS.customers.Customers.to_customers;
+import POS.innosoft.Items;
+import POS.util.Alert;
+import POS.util.Dlg_confirm_action;
 import POS.util.Focus_Fire;
+import POS.util.MyConnectionInnosoft;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.ArrayListModel;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -245,6 +250,7 @@ public class Dlg_customers extends javax.swing.JDialog {
         tf_mi = new javax.swing.JTextField();
         tf_lname = new javax.swing.JTextField();
         tf_fname = new javax.swing.JTextField();
+        jButton5 = new Button.Default();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -449,22 +455,20 @@ public class Dlg_customers extends javax.swing.JDialog {
 
         tf_fname.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
+        jButton5.setText("Update Innosoft Database!");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jXPanel2Layout = new javax.swing.GroupLayout(jXPanel2);
         jXPanel2.setLayout(jXPanel2Layout);
         jXPanel2Layout.setHorizontalGroup(
             jXPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jXPanel2Layout.createSequentialGroup()
-                .addGroup(jXPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jXPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jXPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jXPanel2Layout.createSequentialGroup()
+                .addGroup(jXPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jXPanel2Layout.createSequentialGroup()
                         .addGroup(jXPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -489,7 +493,19 @@ public class Dlg_customers extends javax.swing.JDialog {
                             .addComponent(tf_credit_limit)
                             .addComponent(tf_discount)
                             .addComponent(tf_term)
-                            .addComponent(tf_balance))))
+                            .addComponent(tf_balance)))
+                    .addGroup(jXPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jXPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jXPanel2Layout.createSequentialGroup()
+                                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jXPanel2Layout.setVerticalGroup(
@@ -539,13 +555,14 @@ public class Dlg_customers extends javax.swing.JDialog {
                 .addGroup(jXPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tf_balance))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jXPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -636,6 +653,10 @@ public class Dlg_customers extends javax.swing.JDialog {
     private void tf_credit_limitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_credit_limitActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_credit_limitActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        update_innosoft();
+    }//GEN-LAST:event_jButton5ActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -644,6 +665,7 @@ public class Dlg_customers extends javax.swing.JDialog {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -763,7 +785,7 @@ public class Dlg_customers extends javax.swing.JDialog {
     // </editor-fold>
 
     private void init_no() {
-        tf_customer_no.setText(S1_customers.increment_id());
+        tf_customer_no.setText(Customers.increment_id());
     }
 
     public void do_pass(final String search) {
@@ -909,29 +931,25 @@ public class Dlg_customers extends javax.swing.JDialog {
     }
 
     private void data_cols() {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String where = " where last_name like '%" + tf_search.getText() + "%' or first_name like '%" + tf_search.getText() + "%' order by last_name asc";
-                loadData_customers(S1_customers.ret_data2(where));
-            }
-        });
-        t.start();
+        String where = " where last_name like '%" + tf_search.getText() + "%' or first_name like '%" + tf_search.getText() + "%' order by last_name asc";
+        loadData_customers(Customers.ret_data2(where));
     }
- private void data_cols2(final String search) {
+
+    private void data_cols2(final String search) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 String where = " where last_name like '%" + search + "%' or first_name like '%" + search + "%' order by last_name asc";
-                loadData_customers(S1_customers.ret_data2(where));
+                loadData_customers(Customers.ret_data2(where));
             }
         });
         t.start();
     }
+
     private void add_customers() {
         int id = -1;
         String customer_name = "";
-        String customer_no = S1_customers.increment_id();
+        String customer_no = Customers.increment_id();
         String contact_no = tf_contact_no.getText();
         double credit_limit = FitIn.toDouble(tf_credit_limit.getText());
         String address = tf_address.getText();
@@ -943,9 +961,17 @@ public class Dlg_customers extends javax.swing.JDialog {
         String first_name = tf_fname.getText();
         String last_name = tf_lname.getText();
         String mi = tf_mi.getText();
-        double deposit=0;
-        to_customers to = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,deposit);
-        S1_customers.add_customers(to);
+        double deposit = 0;
+        to_customers to = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi, deposit);
+        Customers.add_customers(to);
+        String send_sales_to_innosoft = System.getProperty("send_sales_to_innosoft", "false");
+        System.out.println("Send to Innosoft: " + send_sales_to_innosoft);
+        if (send_sales_to_innosoft.equalsIgnoreCase("true")) {
+            int connected = MyConnectionInnosoft.check_connection();
+            if (connected == 1) {
+                Customers.add_customer_innosoft(to);
+            }
+        }
         data_cols();
         clear_customers();
         init_no();
@@ -991,9 +1017,9 @@ public class Dlg_customers extends javax.swing.JDialog {
         String first_name = tf_fname.getText();
         String last_name = tf_lname.getText();
         String mi = tf_mi.getText();
-        double deposit=to.deposit;
-        to_customers to1 = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi,deposit);
-        S1_customers.edit_customers(to1);
+        double deposit = to.deposit;
+        to_customers to1 = new to_customers(id, customer_name, customer_no, contact_no, credit_limit, address, term, location, balance, discount, account, first_name, last_name, mi, deposit);
+        Customers.edit_customers(to1);
         data_cols();
         clear_customers();
     }
@@ -1017,7 +1043,7 @@ public class Dlg_customers extends javax.swing.JDialog {
         }
         to_customers to = (to_customers) tbl_customers_ALM.get(tbl_customers.
                 convertRowIndexToModel(row));
-        S1_customers.delete_customers(to);
+        Customers.delete_customers(to);
         data_cols();
         clear_customers();
         init_no();
@@ -1039,5 +1065,28 @@ public class Dlg_customers extends javax.swing.JDialog {
         if (callback != null) {
             callback.ok(new CloseDialog(this), new OutputData(customer_id, customer_name, customer_address, customer_contact_no));
         }
+    }
+
+    private void update_innosoft() {
+
+        Window p = (Window) this;
+        Dlg_confirm_action nd = Dlg_confirm_action.create(p, true);
+        nd.setTitle("");
+        nd.setCallback(new Dlg_confirm_action.Callback() {
+
+            @Override
+            public void ok(CloseDialog closeDialog, Dlg_confirm_action.OutputData data) {
+                closeDialog.ok();
+                int connected = MyConnectionInnosoft.check_connection();
+                if (connected == 0) {
+                    Alert.set(0, "Cannot connect to innosoft, please check connection!");
+                    return;
+                }
+                Customers.update_innosoft();
+                Alert.set(2, "");
+            }
+        });
+        nd.setLocationRelativeTo(this);
+        nd.setVisible(true);
     }
 }

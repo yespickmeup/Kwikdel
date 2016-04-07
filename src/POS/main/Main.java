@@ -49,27 +49,25 @@ public class Main {
                 nd.setLocationRelativeTo(null);
 
                 nd.setVisible(true);
-            } else {
-                if (total >= 1 && total <= 20) {
-                    Window p = (Window) new JFrame();
-                    Dlg_license nd = Dlg_license.create(p, true);
-                    nd.setTitle("");
-                    nd.do_pass(total);
-                    nd.setCallback(new Dlg_license.Callback() {
+            } else if (total >= 1 && total <= 20) {
+                Window p = (Window) new JFrame();
+                Dlg_license nd = Dlg_license.create(p, true);
+                nd.setTitle("");
+                nd.do_pass(total);
+                nd.setCallback(new Dlg_license.Callback() {
 
-                        @Override
-                        public void ok(CloseDialog closeDialog, Dlg_license.OutputData data) {
+                    @Override
+                    public void ok(CloseDialog closeDialog, Dlg_license.OutputData data) {
 //                            System.exit(1);
-                            closeDialog.ok();
-                            open();
-                        }
-                    });
-                    nd.setLocationRelativeTo(null);
+                        closeDialog.ok();
+                        open();
+                    }
+                });
+                nd.setLocationRelativeTo(null);
 
-                    nd.setVisible(true);
-                } else {
-                    open();
-                }
+                nd.setVisible(true);
+            } else {
+                open();
             }
         } else {
             open();
@@ -164,10 +162,21 @@ public class Main {
             System.setProperty("license", prop.getProperty("license", "full"));
             System.setProperty("acct_no", prop.getProperty("acct_no", "Accreditation No. 000-0000000000-000000 "));
             System.setProperty("terminal", "t1");
-            
+
             System.setProperty("send_sales_to_innosoft", prop.getProperty("send_sales_to_innosoft", "false"));
             System.setProperty("pool_host_innosoft", prop.getProperty("pool_host_innosoft", "localhost:1433"));
+            System.setProperty("pool_user_innosoft", prop.getProperty("pool_user_innosoft", "synsoft"));
+            System.setProperty("pool_password_innosoft", prop.getProperty("pool_password_innosoft", "synapse246"));
             System.setProperty("mydb_innosoft", prop.getProperty("mydb_innosoft", "pos13"));
+            System.out.println(System.getProperty("pool_host_innosoft", "pool_host_innosoft=127.0.0.1:1433"));
+            String in_host = System.getProperty("pool_host_innosoft", "");
+            String in_user = System.getProperty("pool_user_innosoft", "");
+            String in_password = System.getProperty("pool_password_innosoft", "");
+            String in_db = System.getProperty("mydb_innosoft", "");
+            System.out.println("Innosoft Host: " + in_host);
+            System.out.println("Innosoft User: " + in_user);
+            System.out.println("Innosoft Password: " + in_password);
+            System.out.println("Innosoft DB: " + in_db);
 
         } catch (Exception ex) {
 //                    Lg.$.severe(ex.getMessage());

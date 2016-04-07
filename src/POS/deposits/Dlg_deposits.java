@@ -5,7 +5,7 @@
  */
 package POS.deposits;
 
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.deposits.S1_deposits.to_deposits;
 import POS.items.S1_items;
 import POS.locations.S1_locations;
@@ -1014,16 +1014,16 @@ public class Dlg_deposits extends javax.swing.JDialog {
         jLabel4.setText(FitIn.fmt_wc_0(amount));
         jLabel3.setText(FitIn.fmt_woc(qty));
     }
-    List<S1_customers.to_customers> supplier_list = new ArrayList();
+    List<Customers.to_customers> supplier_list = new ArrayList();
 
     private void init_customers() {
         String search = jTextField1.getText();
         supplier_list.clear();
         String where = " where last_name like '%" + search + "%' order by last_name asc";
-        supplier_list = S1_customers.ret_data2(where);
+        supplier_list = Customers.ret_data2(where);
         Object[][] obj = new Object[supplier_list.size()][2];
         int i = 0;
-        for (S1_customers.to_customers to : supplier_list) {
+        for (Customers.to_customers to : supplier_list) {
             obj[i][0] = " " + to.first_name + " " + to.last_name;
             obj[i][1] = " " + FitIn.fmt_wc_0(to.deposit);
             i++;
@@ -1038,7 +1038,7 @@ public class Dlg_deposits extends javax.swing.JDialog {
             @Override
             public void ok(TableRenderer.OutputData data) {
                 Field.Search tf = (Field.Search) jTextField1;
-                S1_customers.to_customers to = supplier_list.get(data.selected_row);
+                Customers.to_customers to = supplier_list.get(data.selected_row);
                 jTextField1.setText(to.first_name + " " + to.last_name);
                 tf.setId("" + to.id);
                 jTextField3.grabFocus();
@@ -1226,16 +1226,16 @@ public class Dlg_deposits extends javax.swing.JDialog {
         }
     }
 
-    List<S1_customers.to_customers> supplier_list2 = new ArrayList();
+    List<Customers.to_customers> supplier_list2 = new ArrayList();
 
     private void init_customers2(final JTextField tf) {
         String search = tf.getText();
         supplier_list2.clear();
         String where = " where last_name like '%" + search + "%' order by last_name asc";
-        supplier_list2 = S1_customers.ret_data2(where);
+        supplier_list2 = Customers.ret_data2(where);
         Object[][] obj = new Object[supplier_list2.size()][2];
         int i = 0;
-        for (S1_customers.to_customers to : supplier_list2) {
+        for (Customers.to_customers to : supplier_list2) {
             obj[i][0] = " " + to.first_name + " " + to.last_name;
             obj[i][1] = " " + FitIn.fmt_wc_0(to.deposit);
             i++;
@@ -1250,7 +1250,7 @@ public class Dlg_deposits extends javax.swing.JDialog {
             @Override
             public void ok(TableRenderer.OutputData data) {
                 Field.Search tf = (Field.Search) jTextField2;
-                S1_customers.to_customers to = supplier_list2.get(data.selected_row);
+                Customers.to_customers to = supplier_list2.get(data.selected_row);
                 tf.setText(to.first_name + " " + to.last_name);
                 tf.setId("" + to.id);
 

@@ -5,7 +5,7 @@
  */
 package POS.reports;
 
-import POS.customers.S1_customers;
+import POS.customers.Customers;
 import POS.util.DateType;
 import POS.util.Focus_Fire;
 import POS.util.TableRenderer;
@@ -512,7 +512,7 @@ public class Dlg_patronage_refund extends javax.swing.JDialog {
         }
     }
 
-    List<S1_customers.to_customers> customers_list = new ArrayList();
+    List<Customers.to_customers> customers_list = new ArrayList();
 
     private void init_customers(final JTextField tf1, final JTextField tf2) {
 
@@ -527,11 +527,11 @@ public class Dlg_patronage_refund extends javax.swing.JDialog {
                 String where = "";
                 where = where = " where lname like '%" + search + "%' or fname like '%" + search + "%' order by lname asc";
 
-                customers_list = S1_customers.ret_data(where);
+                customers_list = Customers.ret_data(where);
                 if (!customers_list.isEmpty()) {
                     Object[][] obj = new Object[customers_list.size()][2];
                     int i = 0;
-                    for (S1_customers.to_customers to : customers_list) {
+                    for (Customers.to_customers to : customers_list) {
                         obj[i][0] = to.id;
                         obj[i][1] = to.customer_name;
                         i++;
@@ -545,7 +545,7 @@ public class Dlg_patronage_refund extends javax.swing.JDialog {
                     tr.setCallback(new TableRenderer.Callback() {
                         @Override
                         public void ok(TableRenderer.OutputData data) {
-                            S1_customers.to_customers to = customers_list.get(data.selected_row);
+                            Customers.to_customers to = customers_list.get(data.selected_row);
                             tf1.setText("" + to.customer_name);
                             tf2.setText("" + to.id);
                             get_data();

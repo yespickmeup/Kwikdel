@@ -30,7 +30,6 @@ import java.util.List;
 import mijzcx.synapse.desk.utils.Lg;
 import mijzcx.synapse.desk.utils.SqlStringUtil;
 
-
 /**
  *
  * @author Guinness
@@ -301,6 +300,7 @@ public class MySales {
     public static String add_sales(S1_sales.to_sales to_sales, List<S1_sales_items.to_sales_items> to_sales_items1, List<S1_sales_services.to_sales_services> to_sales_services1) {
         try {
             Connection conn = MyConnection.connect();
+
             conn.setAutoCommit(false);
             String sa = S1_sales.increment_id();
             String s1 = "insert into sales("
@@ -584,6 +584,7 @@ public class MySales {
                 if (connected == 1) {
                     try {
                         Connection conn2 = MyConnectionInnosoft.connect();
+                        conn2.createStatement().execute("set ansi_warnings off");
                         for (S1_sales_items.to_sales_items items : to_sales_items1) {
 
                             int id = 0;
@@ -593,8 +594,9 @@ public class MySales {
                             if (rs7.next()) {
                                 id = rs7.getInt(1);
                             }
+
                             String s6 = " insert into dbo.TrnSalesDraft ("
-                                    + "DocRef"
+                                    + " DocRef"
                                     + ",DocDate"
                                     + ",ItemCode"
                                     + ",ItemId "
@@ -622,7 +624,22 @@ public class MySales {
                                     + ",:PhoneNumber"
                                     + ",:MobilePhoneNumber"
                                     + ")";
-
+                            String person = to_sales.customer_name;
+                            String address = to_sales.customer_address;
+                            if (person != null) {
+                                person = person.replaceAll(",", "'.");
+                                person = person.replaceAll("'", ".");
+                                person = person.replaceAll("-", ".");
+                            } else {
+                                person = "";
+                            }
+                            if (address != null) {
+                                address = address.replaceAll(",", "'.");
+                                address = address.replaceAll("'", ".");
+                                address = address.replaceAll("-", ".");
+                            } else {
+                                address = "";
+                            }
                             s6 = SqlStringUtil.parse(s6).
                                     setString("DocRef", sa).
                                     setString("DocDate", DateType.datetime2.format(new Date())).
@@ -632,16 +649,16 @@ public class MySales {
                                     setNumber("Quantity", items.product_qty).
                                     setNumber("Amount", (items.selling_price * items.product_qty)).
                                     setString("CustomerCode", to_sales.customer_id).
-                                    setString("Customer", to_sales.customer_name).
-                                    setString("ContactPerson", to_sales.customer_name).
-                                    setString("Address", to_sales.customer_address).
+                                    setString("Customer", person).
+                                    setString("ContactPerson", person).
+                                    setString("Address", address).
                                     setString("PhoneNumber", to_sales.customer_contact_no).
                                     setString("MobilePhoneNumber", "").
                                     ok();
                             PreparedStatement stmt6 = conn2.prepareStatement(s6);
                             stmt6.execute();
-
                         }
+                        conn2.createStatement().execute("set ansi_warnings on");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     } finally {
