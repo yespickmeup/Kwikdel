@@ -53,7 +53,7 @@ public class MyConnectionInnosoft {
         try {
             conn = DriverManager.getConnection(connectionString);
         } catch (SQLException ex) {
-            Logger.getLogger(MyConnectionInnosoft.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         }
 
         return conn;
@@ -83,7 +83,8 @@ public class MyConnectionInnosoft {
             String password = System.getProperty("pool_password_innosoft", "synapse246");
             String mydb = System.getProperty("mydb_innosoft", "pos13");
             String connectionString = "jdbc:sqlserver://" + host
-                    + ";databaseName=" + mydb + ";user=" + user
+                    + ";databaseName=" + mydb + ""
+                    + ";user=" + user
                     + ";password=" + password
                     + ";integratedSecurity=true;";
             try {
@@ -101,6 +102,7 @@ public class MyConnectionInnosoft {
             }
             return connected;
         } catch (SQLException e) {
+            System.out.println(e);
             return 0;
         }
     }
@@ -162,19 +164,19 @@ public class MyConnectionInnosoft {
             String user = System.getProperty("pool_user_innosoft", "synsoft");
             String password = System.getProperty("pool_password_innosoft", "synapse246");
             String mydb = System.getProperty("mydb_innosoft", "pos13");
-            
+
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(MyConnectionInnosoft.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             String url = "jdbc:mysql://" + host + "/" + mydb;
             String connectionString = "jdbc:sqlserver://" + host
                     + ";databaseName=" + mydb + ";user=" + user
                     + ";password=" + password
                     + ";integratedSecurity=true;";
-            
+
             Connection conn1 = DriverManager.getConnection(connectionString);
             Statement st = conn1.createStatement();
             ResultSet rs = st.executeQuery("SELECT StockInNumber FROM dbo.TrnStockIn order by Id desc  ");
